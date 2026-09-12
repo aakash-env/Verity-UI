@@ -502,7 +502,9 @@ export default function HomePage() {
       const c = params.get("c");
       if (c) {
         const found = BLOCKS.find((b) => b.id === c);
-        if (found) setActiveModalBlock(found);
+        if (found) {
+          queueMicrotask(() => setActiveModalBlock(found));
+        }
       }
     }
   }, []);
@@ -601,6 +603,7 @@ export default function HomePage() {
 
       {/* Floating Split-View Inspector Modal */}
       <InspectorModal
+        key={activeModalBlock?.id}
         block={activeModalBlock}
         onClose={() => setActiveModalBlock(null)}
       />
