@@ -56,17 +56,6 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
         inModal ? 'max-w-lg p-6 sm:p-8' : 'h-full px-4 py-6'
       }`}
     >
-      {/* Header Info */}
-      <div className="mb-5 sm:mb-6 text-center">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-foreground/[0.06] text-muted mb-2 border border-foreground/5">
-          <Sparkles className="size-3 text-foreground/70" />
-          <span>Verification Code</span>
-        </div>
-        <p className="text-xs sm:text-sm text-muted">
-          Enter the 6-digit security code sent to your device
-        </p>
-      </div>
-
       {/* Input OTP Component */}
       <div className="flex flex-col items-center">
         <InputOTP
