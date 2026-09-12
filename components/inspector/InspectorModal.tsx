@@ -51,16 +51,8 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
   const [stageFill, setStageFill] = useState<"dark" | "light">("dark");
   const [strokeOn, setStrokeOn] = useState<boolean>(false);
   const [bounceVal, setBounceVal] = useState<number>(50);
-  const [cornerVal, setCornerVal] = useState<number>(18);
-  const [boxVal, setBoxVal] = useState<number>(18);
-
-  useEffect(() => {
-    if (block) {
-      setTab("tune");
-      setResetKey((prev) => prev + 1);
-      setShared(false);
-    }
-  }, [block]);
+  const cornerVal = 18;
+  const boxVal = 18;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -562,13 +554,6 @@ function ShareIcon() {
   );
 }
 
-function BookmarkIcon({ filled }: { filled?: boolean }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  );
-}
 
 function VolumeOffIcon() {
   return (
