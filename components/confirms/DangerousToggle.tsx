@@ -42,6 +42,7 @@ export function DangerousToggle({
   const [pendingState, setPendingState] = useState<PendingState>("idle");
   const [pendingProgress, setPendingProgress] = useState(0); // 0-1
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [pendingVal, setPendingVal] = useState<boolean | null>(null);
   const pendingValue = useRef<boolean | null>(null);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number | null>(null);
@@ -78,6 +79,7 @@ export function DangerousToggle({
       setPendingState("idle");
       setPendingProgress(0);
       pendingValue.current = null;
+      setPendingVal(null);
     } catch (err) {
       setPendingState("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
@@ -92,12 +94,14 @@ export function DangerousToggle({
 
     if (reducedMotion.current) {
       pendingValue.current = nextValue;
+      setPendingVal(nextValue);
       setPendingState("pending");
       setPendingProgress(1);
       return;
     }
 
     pendingValue.current = nextValue;
+    setPendingVal(nextValue);
     setPendingState("pending");
     setPendingProgress(0);
     startRef.current = performance.now();
@@ -125,6 +129,7 @@ export function DangerousToggle({
     setPendingState("idle");
     setPendingProgress(0);
     pendingValue.current = null;
+    setPendingVal(null);
     onCancel?.();
   };
 
@@ -153,6 +158,7 @@ export function DangerousToggle({
     setPendingProgress(0);
     setErrorMsg(null);
     pendingValue.current = null;
+    setPendingVal(null);
     confirmRef.current = false;
   };
 
@@ -214,12 +220,15 @@ export function DangerousToggle({
           aria-modal="false"
         >
           <p className="dangerous-toggle__popup-text">
-            {pendingValue.current ? "Enable" : "Disable"} {label}?
+            {pendingVal ? "Enable" : "Disable"} {label}?
           </p>
           <div className="dangerous-toggle__popup-actions">
             <button
               className="dangerous-toggle__popup-confirm"
-              onClick={() => pendingValue.current !== null && triggerConfirm(pendingValue.current)}
+              onClick={() => {
+                const target = pendingVal ?? !checked;
+                triggerConfirm(target);
+              }}
               data-risk={risk}
               autoFocus
             >
