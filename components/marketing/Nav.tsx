@@ -138,7 +138,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
         </button>
 
         {/* User Account Name Button / Join for free */}
-        {user ? (
+        {mounted && user ? (
           <div className="relative" ref={userMenuRef}>
             <button
               type="button"
