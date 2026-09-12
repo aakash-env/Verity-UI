@@ -69,7 +69,6 @@ function AuthModalContent() {
     [email, verifyEmailOtp]
   );
 
-
   const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
@@ -200,9 +199,9 @@ function AuthModalContent() {
                     step === "who"
                       ? handleSendEmail
                       : (e) => {
-                          e.preventDefault();
-                          if (code.length === 6) handleVerifyCode(code);
-                        }
+                        e.preventDefault();
+                        if (code.length === 6) handleVerifyCode(code);
+                      }
                   }
                   noValidate
                 >
@@ -277,8 +276,8 @@ function AuthModalContent() {
                     {loading
                       ? "One moment…"
                       : step === "who"
-                      ? "Continue"
-                      : "Sign in"}
+                        ? "Continue"
+                        : "Sign in"}
                   </button>
                 </form>
 
