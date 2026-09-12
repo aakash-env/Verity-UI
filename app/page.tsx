@@ -26,6 +26,7 @@ import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "@/components/blocks/CanvasTextDemo";
 import { InputOtpDemo } from "@/components/blocks/InputOtpDemo";
 import { SlidersHorizontal } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -495,6 +496,7 @@ className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transf
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeModalBlock, setActiveModalBlock] = useState<BlockConfig | null>(null);
+  const { benchedBlocks, toggleBench } = useAuth();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -566,12 +568,26 @@ export default function HomePage() {
                 {renderCardComponent(block.id)}
               </div>
 
-              {/* Hover overlay with title on bottom-left and tune button on bottom-right (exact bencho.dev design) */}
+              {/* Hover overlay: title on bottom-left, action buttons on bottom-right (exact bencho.dev design) */}
               <div className="bencho-card-overlay">
                 <span className="bencho-card-title-hover">
                   {block.name}
                 </span>
                 <div className="bencho-card-actions-hover">
+                  <button
+                    type="button"
+                    className={`bencho-card-tune-btn ${
+                      benchedBlocks.includes(block.id) ? "bg-[#34363d]" : ""
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleBench(block.id);
+                    }}
+                    title={benchedBlocks.includes(block.id) ? "Remove from bench" : "Add to bench"}
+                    aria-label="Add to bench"
+                  >
+                    <span className="w-2.5 h-2.5 rounded-[2px] bg-white block" />
+                  </button>
                   <button
                     type="button"
                     className="bencho-card-tune-btn"
