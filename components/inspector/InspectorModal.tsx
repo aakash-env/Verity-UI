@@ -118,7 +118,7 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
         return <CanvasTextDemo key={resetKey} />;
 
       case "card-spotlight":
-        return <CardSpotlightDemo key={resetKey} />;
+        return <CardSpotlightDemo inModal key={resetKey} />;
 
       case "input-otp":
         return <InputOtpDemo inModal key={resetKey} />;
