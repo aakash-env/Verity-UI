@@ -48,7 +48,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setBenchedBlocks(JSON.parse(saved));
+        queueMicrotask(() => {
+          setBenchedBlocks(JSON.parse(saved));
+        });
       }
     } catch {
       // ignore
