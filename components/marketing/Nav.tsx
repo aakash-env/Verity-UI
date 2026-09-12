@@ -4,6 +4,8 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "./Logo";
+import { useAuth } from "@/context/AuthContext";
+import { LogOut } from "lucide-react";
 
 interface NavProps {
   searchQuery?: string;
@@ -12,8 +14,10 @@ interface NavProps {
 
 export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
   const { resolvedTheme, setTheme } = useTheme();
+  const { user, openAuthModal, signOut } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -98,13 +102,66 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
           )}
         </button>
 
-        {/* Join for free / Get button */}
-        <a
-          href="#blocks"
-          className="bencho-nav-cta"
-        >
-          Join for free
-        </a>
+        {/* User Account / Join for free */}
+        {user ? (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsUserMenuOpen((o) => !o)}
+              className="size-8 rounded-full border border-white/10 hover:border-white/20 bg-white/5 flex items-center justify-center text-xs font-semibold text-white overflow-hidden transition-all cursor-pointer"
+              title={user.email || "Account"}
+              aria-label="User account menu"
+            >
+              {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                <img
+                  src={user.user_metadata.avatar_url || user.user_metadata.picture}
+                  alt={user.email || "User avatar"}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <span>{(user.email?.[0] || "U").toUpperCase()}</span>
+              )}
+            </button>
+
+            {isUserMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsUserMenuOpen(false)}
+                />
+                <div className="absolute right-0 mt-2 w-48 rounded-xl bg-[#1c1d22] border border-white/10 shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-3 py-2 border-b border-white/5">
+                    <p className="text-xs font-medium text-white truncate">
+                      {user.user_metadata?.full_name ||
+                        user.user_metadata?.name ||
+                        "Member"}
+                    </p>
+                    <p className="text-[11px] text-muted truncate">{user.email}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      signOut();
+                    }}
+                    className="w-full px-3 py-2 text-left text-xs text-red-400 hover:bg-white/5 flex items-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="size-3.5" />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => openAuthModal()}
+            className="bencho-nav-cta cursor-pointer"
+          >
+            Join for free
+          </button>
+        )}
       </div>
     </nav>
   );
