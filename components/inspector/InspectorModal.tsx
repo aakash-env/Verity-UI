@@ -19,7 +19,6 @@ import { ImagesBadgeDemo } from "../blocks/ImagesBadgeDemo";
 import { TextHoverEffectDemo } from "../blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "../blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "../blocks/CanvasTextDemo";
-import { CardSpotlightDemo } from "../blocks/CardSpotlightDemo";
 import { InputOtpDemo } from "../blocks/InputOtpDemo";
 
 export interface BlockConfig {
@@ -116,9 +115,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
 
       case "canvas-text":
         return <CanvasTextDemo key={resetKey} />;
-
-      case "card-spotlight":
-        return <CardSpotlightDemo inModal key={resetKey} />;
 
       case "input-otp":
         return <InputOtpDemo inModal key={resetKey} />;
