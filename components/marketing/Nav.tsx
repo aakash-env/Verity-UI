@@ -1,0 +1,157 @@
+"use client";
+
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BrandLogo } from "./Logo";
+
+interface NavProps {
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+}
+
+export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
+
+  return (
+    <nav className="bencho-nav" aria-label="Main Navigation">
+      {/* Left: Brand Icon + Links */}
+      <div className="flex items-center gap-6">
+        <Link href="/" className="text-[var(--color-text)] flex items-center hover:opacity-85 transition-opacity" aria-label="Verity">
+          <BrandLogo size={22} />
+        </Link>
+        <div className="flex items-center gap-5 text-sm">
+          <a href="#blocks" className="text-[var(--color-text)] font-medium">
+            Blocks
+          </a>
+          <a
+            href="#blocks"
+            className="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+          >
+            Studio
+          </a>
+        </div>
+      </div>
+
+      {/* Center: Search pill bar */}
+      <div className="bencho-search-bar">
+        <SearchIcon />
+        <input
+          type="text"
+          placeholder="Search components"
+          value={searchQuery}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          className="bencho-search-input"
+          aria-label="Search confirmation components"
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => onSearchChange?.("")}
+            className="text-xs text-[var(--color-muted)] hover:text-[var(--color-text)]"
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Right: Sound, Theme, Join */}
+      <div className="flex items-center gap-3">
+        {/* Sound toggle (bencho style) */}
+        <button
+          type="button"
+          onClick={() => setSoundEnabled((s) => !s)}
+          className="bencho-nav-icon-btn"
+          title={soundEnabled ? "Mute audio" : "Unmute audio"}
+          aria-label={soundEnabled ? "Mute audio" : "Unmute audio"}
+        >
+          {soundEnabled ? <VolumeOnIcon /> : <VolumeOffIcon />}
+        </button>
+
+        {/* Theme toggle */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="bencho-nav-icon-btn"
+          title={mounted ? `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
+          aria-label="Toggle theme"
+        >
+          {mounted ? (
+            resolvedTheme === "dark" ? (
+              <SunIcon />
+            ) : (
+              <MoonIcon />
+            )
+          ) : (
+            <span className="w-4 h-4 opacity-0" />
+          )}
+        </button>
+
+        {/* Join for free / Get button */}
+        <a
+          href="#blocks"
+          className="bencho-nav-cta"
+        >
+          Join for free
+        </a>
+      </div>
+    </nav>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-muted)] shrink-0">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" x2="16.65" y1="21" y2="16.65" />
+    </svg>
+  );
+}
+
+function VolumeOffIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <line x1="23" x2="17" y1="9" y2="15" />
+      <line x1="17" x2="23" y1="9" y2="15" />
+    </svg>
+  );
+}
+
+function VolumeOnIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </svg>
+  );
+}
