@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Rounded squircle badge with subtle border -->
+  <rect width="32" height="32" rx="8" fill="#101114" />
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+  
+  <!-- Ambient soft radial glow behind star -->
+  <circle cx="16" cy="16" r="8" fill="rgba(255, 255, 255, 0.05)" />
+
+  <!-- 4-Point Chiseled Astroid Star -->
+  <!-- Quadrant 1: North-East (Direct Light) -->
+  <path d="M16 16L16 5C16 11.07 20.93 16 27 16L16 16Z" fill="#ECEAE5" />
+  
+  <!-- Quadrant 4: North-West (Ambient Light) -->
+  <path d="M16 16L5 16C11.07 16 16 11.07 16 5L16 16Z" fill="#D1D2D8" />
+  
+  <!-- Quadrant 3: South-West (Deep Shadow) -->
+  <path d="M16 16L16 27C16 20.93 11.07 16 5 16L16 16Z" fill="#636674" />
+  
+  <!-- Quadrant 2: South-East (Mid Shadow) -->
+  <path d="M16 16L27 16C20.93 16 16 20.93 16 27L16 16Z" fill="#9699A6" />
+  
+  <!-- Center Aperture & Core Pip -->
+  <circle cx="16" cy="16" r="2.2" fill="#101114" />
+  <circle cx="16" cy="16" r="1.1" fill="#ECEAE5" />
+</svg>
