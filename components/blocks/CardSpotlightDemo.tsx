@@ -1,7 +1,11 @@
 "use client";
 
 import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { Check } from "lucide-react";
+import { Check, ShieldCheck } from "lucide-react";
+
+interface CardSpotlightDemoProps {
+  inModal?: boolean;
+}
 
 const steps = [
   "Enter your email address",
@@ -10,43 +14,62 @@ const steps = [
   "Verify your identity",
 ];
 
-export function CardSpotlightDemo() {
+export function CardSpotlightDemo({ inModal = false }: CardSpotlightDemoProps) {
   return (
     <div
-      className="w-full max-w-[420px] select-none cursor-default"
+      className={`w-full select-none cursor-default flex items-center justify-center ${
+        inModal ? "max-w-md p-2" : "max-w-[320px] sm:max-w-[340px]"
+      }`}
       onClick={(e) => e.stopPropagation()}
     >
       <CardSpotlight
-        color="#262626"
-        radius={280}
-        className="min-h-[290px] w-full rounded-2xl border-white/10 bg-[#09090b] p-6 shadow-2xl"
+        color="#1e2229"
+        radius={inModal ? 320 : 220}
+        className={`w-full rounded-2xl border border-white/10 bg-[#0f1013] shadow-xl ${
+          inModal ? "p-6 sm:p-8" : "p-4 sm:p-5"
+        }`}
       >
         <div className="relative z-20 text-left">
-          <h3 className="text-xl font-bold tracking-tight text-white">
-            Authentication steps
-          </h3>
-          <p className="mt-3 text-xs leading-relaxed text-neutral-300">
+          {/* Header */}
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2">
+              <div className="size-6 rounded-lg bg-blue-500/15 border border-blue-500/25 flex items-center justify-center shrink-0">
+                <ShieldCheck className="size-3.5 text-blue-400" />
+              </div>
+              <h3 className="text-sm font-semibold tracking-tight text-white">
+                Authentication steps
+              </h3>
+            </div>
+            <span className="text-[10px] font-mono font-medium text-neutral-400 bg-white/[0.06] px-2 py-0.5 rounded-full border border-white/5 shrink-0">
+              4 steps
+            </span>
+          </div>
+
+          <p className="text-[11px] text-neutral-400 leading-snug mb-3">
             Follow these steps to secure your account:
           </p>
 
-          <ul className="mt-4 space-y-2 text-xs font-medium text-white">
+          {/* Checklist */}
+          <ul className="space-y-1.5 text-xs text-white">
             {steps.map((step) => (
               <li key={step} className="flex items-center gap-2">
-                <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-500">
+                <span className="flex size-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-blue-400">
                   <Check
-                    className="size-2.5 stroke-[3] text-white"
+                    className="size-2 stroke-[3] text-blue-400"
                     aria-hidden="true"
                   />
                 </span>
-                <span>{step}</span>
+                <span className="text-[11.5px] text-neutral-200 font-normal">
+                  {step}
+                </span>
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 text-[11px] leading-relaxed text-neutral-400">
-            Ensuring your account is properly secured helps protect your
-            personal information and data.
-          </p>
+          <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-neutral-400">
+            <span>Account Security</span>
+            <span className="text-blue-400 font-medium">Ready to verify</span>
+          </div>
         </div>
       </CardSpotlight>
     </div>
