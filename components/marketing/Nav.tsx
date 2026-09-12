@@ -2,10 +2,10 @@
 
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BrandLogo } from "./Logo";
 import { useAuth } from "@/context/AuthContext";
-import { LogOut } from "lucide-react";
+import { LogOut, ChevronDown } from "lucide-react";
 
 interface NavProps {
   searchQuery?: string;
@@ -18,14 +18,49 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
   const [mounted, setMounted] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Close user dropdown when clicking outside or pressing Escape
+  useEffect(() => {
+    if (!isUserMenuOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isUserMenuOpen]);
+
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
+
+  // Derive user display name & avatar
+  const userMetadata = user?.user_metadata;
+  const fullName =
+    userMetadata?.full_name ||
+    userMetadata?.name ||
+    userMetadata?.user_name ||
+    (user?.email ? user.email.split("@")[0] : "Member");
+
+  const avatarUrl = userMetadata?.avatar_url || userMetadata?.picture;
 
   return (
     <nav className="bencho-nav" aria-label="Main Navigation">
@@ -70,7 +105,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
         )}
       </div>
 
-      {/* Right: Sound, Theme, Join */}
+      {/* Right: Sound, Theme, Join / User */}
       <div className="flex items-center gap-3">
         {/* Sound toggle (bencho style) */}
         <button
@@ -102,55 +137,77 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
           )}
         </button>
 
-        {/* User Account / Join for free */}
+        {/* User Account Name Button / Join for free */}
         {user ? (
-          <div className="relative">
+          <div className="relative" ref={userMenuRef}>
             <button
               type="button"
               onClick={() => setIsUserMenuOpen((o) => !o)}
-              className="size-8 rounded-full border border-white/10 hover:border-white/20 bg-white/5 flex items-center justify-center text-xs font-semibold text-white overflow-hidden transition-all cursor-pointer"
-              title={user.email || "Account"}
+              className="bencho-nav-user-pill"
+              title={fullName}
               aria-label="User account menu"
+              aria-expanded={isUserMenuOpen}
+              aria-haspopup="menu"
             >
-              {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+              {avatarUrl ? (
                 <img
-                  src={user.user_metadata.avatar_url || user.user_metadata.picture}
-                  alt={user.email || "User avatar"}
-                  className="size-full object-cover"
+                  src={avatarUrl}
+                  alt={fullName}
+                  className="bencho-nav-user-avatar"
                 />
               ) : (
-                <span>{(user.email?.[0] || "U").toUpperCase()}</span>
+                <span className="bencho-nav-user-avatar">
+                  {(fullName[0] || "U").toUpperCase()}
+                </span>
               )}
+              <span className="truncate max-w-[110px] font-medium">{fullName}</span>
+              <ChevronDown
+                className="w-3.5 h-3.5 opacity-60 shrink-0 transition-transform duration-150"
+                style={{
+                  transform: isUserMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              />
             </button>
 
             {isUserMenuOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsUserMenuOpen(false)}
-                />
-                <div className="absolute right-0 mt-2 w-48 rounded-xl bg-[#1c1d22] border border-white/10 shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-3 py-2 border-b border-white/5">
-                    <p className="text-xs font-medium text-white truncate">
-                      {user.user_metadata?.full_name ||
-                        user.user_metadata?.name ||
-                        "Member"}
-                    </p>
-                    <p className="text-[11px] text-muted truncate">{user.email}</p>
+              <div
+                className="bencho-user-dropdown"
+                role="menu"
+                aria-orientation="vertical"
+              >
+                <div className="bencho-user-dropdown-header">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={fullName}
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                    />
+                  ) : (
+                    <span className="w-8 h-8 rounded-full bg-[var(--color-text)] text-[var(--color-bg)] flex items-center justify-center text-xs font-semibold shrink-0">
+                      {(fullName[0] || "U").toUpperCase()}
+                    </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="bencho-user-dropdown-name truncate">{fullName}</p>
+                    <p className="bencho-user-dropdown-email truncate">{user.email}</p>
                   </div>
+                </div>
+
+                <div className="pt-1">
                   <button
                     type="button"
-                    onClick={() => {
+                    role="menuitem"
+                    onClick={async () => {
                       setIsUserMenuOpen(false);
-                      signOut();
+                      await signOut();
                     }}
-                    className="w-full px-3 py-2 text-left text-xs text-red-400 hover:bg-white/5 flex items-center gap-2 transition-colors cursor-pointer"
+                    className="bencho-user-dropdown-item bencho-user-dropdown-item--danger"
                   >
-                    <LogOut className="size-3.5" />
-                    <span>Sign out</span>
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Log out</span>
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         ) : (
