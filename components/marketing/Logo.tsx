@@ -60,15 +60,23 @@ export function BrandLogo({
 
   return (
     <span
-      role="button"
-      tabIndex={0}
-      onClick={cycleVariant}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          cycleVariant(e as unknown as React.MouseEvent);
-        }
-      }}
-      className={`relative inline-flex items-center justify-center p-0.5 rounded-lg text-[var(--color-text)] transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer select-none ${className}`}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={interactive ? cycleVariant : undefined}
+      onKeyDown={
+        interactive
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                cycleVariant(e as unknown as React.MouseEvent);
+              }
+            }
+          : undefined
+      }
+      className={`relative inline-flex items-center justify-center p-0.5 rounded-lg text-[var(--color-text)] select-none ${
+        interactive
+          ? "transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+          : ""
+      } ${className}`}
       title={interactive ? `${currentName} • Click to cycle logo design` : currentName}
       aria-label={`${currentName} logo`}
     >
