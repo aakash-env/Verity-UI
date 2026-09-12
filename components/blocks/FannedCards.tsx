@@ -66,12 +66,12 @@ export function FannedCards() {
         const isHovered = hoveredIdx === idx;
 
         // Dynamic transforms
-        let translateX = isLeft ? (isDeckHovered ? -58 : -40) : isCenter ? 0 : isDeckHovered ? 58 : 40;
-        let translateY = isCenter ? (isHovered ? -12 : -4) : isHovered ? -8 : 6;
-        let rotate = isLeft ? (isDeckHovered ? -14 : -9) : isCenter ? 0 : isDeckHovered ? 14 : 9;
-        let scale = isHovered ? 1.06 : isCenter ? 1.0 : 0.93;
-        let zIndex = isHovered ? 30 : isCenter ? 20 : 10;
-        let opacity = isCenter || isHovered ? 1 : 0.88;
+        const translateX = isLeft ? (isDeckHovered ? -58 : -40) : isCenter ? 0 : isDeckHovered ? 58 : 40;
+        const translateY = isCenter ? (isHovered ? -12 : -4) : isHovered ? -8 : 6;
+        const rotate = isLeft ? (isDeckHovered ? -14 : -9) : isCenter ? 0 : isDeckHovered ? 14 : 9;
+        const scale = isHovered ? 1.06 : isCenter ? 1.0 : 0.93;
+        const zIndex = isHovered ? 30 : isCenter ? 20 : 10;
+        const opacity = isCenter || isHovered ? 1 : 0.88;
 
         return (
           <div
