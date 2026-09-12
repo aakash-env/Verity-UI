@@ -7,7 +7,7 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@/components/ui/input-otp'
-import { AlertCircle, CheckCircle2, RotateCcw, Sparkles } from 'lucide-react'
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
 
 interface InputOtpDemoProps {
   inModal?: boolean
@@ -35,26 +35,11 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
     }
   }
 
-  const simulatePaste = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setValue('849201')
-    setIsSuccess(true)
-    setHasError(false)
-  }
-
-  const handleReset = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setValue('')
-    setIsSuccess(false)
-    setHasError(false)
-  }
-
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`relative flex flex-col items-center justify-center select-none w-full ${
-        inModal ? 'max-w-lg p-6 sm:p-8' : 'h-full px-4 py-6'
-      }`}
+      className={`relative flex flex-col items-center justify-center select-none w-full ${inModal ? 'max-w-lg p-6 sm:p-8' : 'h-full px-4 py-6'
+        }`}
     >
       {/* Input OTP Component */}
       <div className="flex flex-col items-center">
@@ -86,7 +71,7 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
               aria-live="polite"
             >
               <AlertCircle className="size-3.5 shrink-0" />
-              <span>Invalid code. Hint: try 849201</span>
+              <span>Invalid code. Please try again.</span>
             </div>
           )}
           {isSuccess && (
@@ -98,35 +83,12 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
               <span>Code verified successfully!</span>
             </div>
           )}
-          {!hasError && !isSuccess && value.length === 0 && (
-            <span className="text-[11px] text-muted/60 tracking-wider uppercase font-mono">
-              Try typing or click paste
+          {!hasError && !isSuccess && (
+            <span className="text-xs text-muted/60 tracking-wide">
+              Type 849201
             </span>
           )}
         </div>
-      </div>
-
-      {/* Quick Action Controls */}
-      <div className="mt-5 sm:mt-6 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={simulatePaste}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground/[0.06] hover:bg-foreground/[0.1] text-foreground transition-all duration-150 border border-foreground/5 active:scale-95 cursor-pointer"
-        >
-          <Sparkles className="size-3 text-foreground/70" />
-          <span>Paste Demo (849201)</span>
-        </button>
-        {value.length > 0 && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted hover:text-foreground transition-all duration-150 border border-foreground/5 active:scale-95 cursor-pointer"
-            title="Clear input"
-          >
-            <RotateCcw className="size-3" />
-            <span>Clear</span>
-          </button>
-        )}
       </div>
     </div>
   )
