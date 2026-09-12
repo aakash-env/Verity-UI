@@ -20,6 +20,7 @@ import { TextHoverEffectDemo } from "../blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "../blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "../blocks/CanvasTextDemo";
 import { InputOtpDemo } from "../blocks/InputOtpDemo";
+import { useAuth } from "@/context/AuthContext";
 
 export interface BlockConfig {
   id: string;
@@ -39,10 +40,11 @@ interface InspectorModalProps {
 }
 
 export function InspectorModal({ block, onClose }: InspectorModalProps) {
+  const { benchedBlocks, toggleBench } = useAuth();
   const [tab, setTab] = useState<"tune" | "code">("tune");
   const [copiedTarget, setCopiedTarget] = useState<string | null>(null);
   const [shared, setShared] = useState(false);
-  const [addedToBench, setAddedToBench] = useState(false);
+  const isBenched = block ? benchedBlocks.includes(block.id) : false;
   const [bookmarked, setBookmarked] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -58,7 +60,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
     if (block) {
       setTab("tune");
       setResetKey((prev) => prev + 1);
-      setAddedToBench(false);
       setShared(false);
     }
   }, [block]);
@@ -95,8 +96,9 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
   };
 
   const handleAddToBench = () => {
-    setAddedToBench(true);
-    setTimeout(() => setAddedToBench(false), 2500);
+    if (block) {
+      toggleBench(block.id);
+    }
   };
 
   const renderComponentPreview = () => {
@@ -269,12 +271,14 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
           <div className="flex items-center justify-end gap-2.5 z-10">
             <button
               type="button"
-              onClick={() => setBookmarked((b) => !b)}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[#eceae5]/50 hover:text-[#eceae5] transition-colors cursor-pointer"
-              title={bookmarked ? "Bookmarked" : "Bookmark block"}
+              onClick={handleAddToBench}
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                isBenched ? "text-white" : "text-[#eceae5]/50 hover:text-[#eceae5]"
+              }`}
+              title={isBenched ? "Remove from bench" : "Bookmark block"}
               aria-label="Bookmark block"
             >
-              <BookmarkIcon filled={bookmarked} />
+              <BookmarkIcon filled={isBenched} />
             </button>
             <button
               type="button"
@@ -534,9 +538,11 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
             <button
               type="button"
               onClick={handleAddToBench}
-              className="bencho-inspector__add-btn"
+              className={`bencho-inspector__add-btn ${
+                isBenched ? "bg-[#34363d] text-white" : ""
+              }`}
             >
-              {addedToBench ? "Added to bench! ✓" : "Add to bench"}
+              {isBenched ? "Added to bench! ✓" : "Add to bench"}
             </button>
           </div>
         </div>
