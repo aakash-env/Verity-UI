@@ -25,14 +25,14 @@ export function BrandLogo({
   interactive = true,
 }: BrandLogoProps) {
   const [variant, setVariant] = useState<LogoVariant>(initialVariant);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     try {
       const saved = localStorage.getItem("verity_brand_logo_variant") as LogoVariant;
       if (saved && VARIANTS.some((v) => v.id === saved)) {
-        setVariant(saved);
+        queueMicrotask(() => {
+          setVariant(saved);
+        });
       }
     } catch {
       // ignore
