@@ -185,27 +185,26 @@ className="bg-[#151619] dark:bg-[#151619]"`,
     category: "INTERACTION",
     tagline: "Dynamic cursor-tracking radial ambient spotlight card",
     description:
-      "Deep dark surface with spring-smooth cursor spotlight tracking, specular border illumination, and 2FA key enclave card.",
+      "Interactive spotlight card with dynamic cursor-tracking radial gradient and animated matrix dot reveal effect.",
     codeReact: `import { CardSpotlight } from "@/components/ui/card-spotlight";
 
-<CardSpotlight
-  color="rgba(99, 102, 241, 0.25)"
-  radius={220}
->
-  <div className="p-4">
-    <h3>Enterprise Security</h3>
-    <p>Hardware key enclave encryption</p>
+<CardSpotlight className="h-96 w-96">
+  <p className="text-xl font-bold relative z-20 mt-2 text-white">
+    Authentication steps
+  </p>
+  <div className="text-neutral-200 mt-4 relative z-20">
+    Follow these steps to secure your account:
   </div>
 </CardSpotlight>`,
     codeCss: `/* Tailwind CSS utility classes */
-// Card container
-className="group/spotlight relative overflow-hidden rounded-[24px] border border-white/10 bg-[#17181c] p-6 select-none"
+// Card Spotlight container
+className="group/spotlight p-8 rounded-2xl relative border border-neutral-800 bg-[#09090b] dark:border-neutral-800 select-none overflow-hidden"
 
-// Radial cursor spotlight layer
-className="pointer-events-none absolute -inset-px rounded-[24px] opacity-0 transition-opacity duration-300 group-hover/spotlight:opacity-100 bg-[radial-gradient(280px_circle_at_var(--mouse-x)_var(--mouse-y),rgba(99,102,241,0.25),transparent_80%)]"
+// Masked radial spotlight layer with CanvasRevealEffect
+className="pointer-events-none absolute z-0 -inset-px rounded-2xl opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
 
-// Ambient border specular highlight
-className="pointer-events-none absolute -inset-px rounded-[24px] border border-white/20 [mask-image:radial-gradient(220px_circle_at_var(--mouse-x)_var(--mouse-y),white,transparent)]"`,
+// Inner content relative layer
+className="relative z-20"`,
   },
   {
     id: "fanned-cards",
