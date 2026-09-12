@@ -24,7 +24,6 @@ import { ImagesBadgeDemo } from "@/components/blocks/ImagesBadgeDemo";
 import { TextHoverEffectDemo } from "@/components/blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "@/components/blocks/CanvasTextDemo";
-import { CardSpotlightDemo } from "@/components/blocks/CardSpotlightDemo";
 import { InputOtpDemo } from "@/components/blocks/InputOtpDemo";
 import { SlidersHorizontal } from "lucide-react";
 
@@ -179,33 +178,6 @@ className="pointer-events-none absolute top-0 left-0 w-full h-full"
 
 // Surface background token
 className="bg-[#151619] dark:bg-[#151619]"`,
-  },
-  {
-    id: "card-spotlight",
-    name: "Card spotlight",
-    category: "INTERACTION",
-    tagline: "Dynamic cursor-tracking radial ambient spotlight card",
-    description:
-      "Interactive spotlight card with dynamic cursor-tracking radial gradient and animated matrix dot reveal effect.",
-    codeReact: `import { CardSpotlight } from "@/components/ui/card-spotlight";
-
-<CardSpotlight className="h-96 w-96">
-  <p className="text-xl font-bold relative z-20 mt-2 text-white">
-    Authentication steps
-  </p>
-  <div className="text-neutral-200 mt-4 relative z-20">
-    Follow these steps to secure your account:
-  </div>
-</CardSpotlight>`,
-    codeCss: `/* Tailwind CSS utility classes */
-// Card Spotlight container
-className="group/spotlight p-8 rounded-2xl relative border border-neutral-800 bg-[#09090b] dark:border-neutral-800 select-none overflow-hidden"
-
-// Masked radial spotlight layer with CanvasRevealEffect
-className="pointer-events-none absolute z-0 -inset-px rounded-2xl opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
-
-// Inner content relative layer
-className="relative z-20"`,
   },
   {
     id: "input-otp",
@@ -654,9 +626,6 @@ function renderCardComponent(id: string) {
 
     case "canvas-text":
       return <CanvasTextDemo />;
-
-    case "card-spotlight":
-      return <CardSpotlightDemo />;
 
     case "input-otp":
       return <InputOtpDemo />;
