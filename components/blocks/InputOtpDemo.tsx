@@ -42,7 +42,7 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
         }`}
     >
       {/* Input OTP Component */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-8 sm:gap-9">
         <InputOTP
           maxLength={6}
           value={value}
@@ -64,7 +64,7 @@ export function InputOtpDemo({ inModal = false }: InputOtpDemoProps) {
         </InputOTP>
 
         {/* State Messages */}
-        <div className="h-6 mt-3.5 flex items-center justify-center">
+        <div className="h-6 flex items-center justify-center">
           {hasError && (
             <div
               className="flex items-center gap-1.5 text-xs font-medium text-red-500 animate-in fade-in slide-in-from-top-1 duration-200"
