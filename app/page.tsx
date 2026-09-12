@@ -25,6 +25,7 @@ import { TextHoverEffectDemo } from "@/components/blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "@/components/blocks/CanvasTextDemo";
 import { CardSpotlightDemo } from "@/components/blocks/CardSpotlightDemo";
+import { InputOtpDemo } from "@/components/blocks/InputOtpDemo";
 import { SlidersHorizontal } from "lucide-react";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -205,6 +206,56 @@ className="pointer-events-none absolute z-0 -inset-px rounded-2xl opacity-0 tran
 
 // Inner content relative layer
 className="relative z-20"`,
+  },
+  {
+    id: "input-otp",
+    name: "Input OTP",
+    category: "SELECTION",
+    tagline: "Segmented one-time code input with 3D flip and sweep trails",
+    description:
+      "A segmented one-time-password input with spring-animated 3D flip digits, active focus rings, paste sweep trails, and validation states.",
+    codeReact: `import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "@/components/ui/input-otp";
+
+export function OtpVerification() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <InputOTP
+      maxLength={6}
+      value={value}
+      onChange={(value) => setValue(value)}
+    >
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
+  );
+}`,
+    codeCss: `/* Tailwind CSS utility classes */
+// Segmented slot
+className="relative flex size-14 items-center justify-center rounded-xl bg-foreground/[0.06] text-2xl font-semibold tabular-nums ring-1 ring-foreground/8 transition-[background-color,color] duration-150 ease-out outline-none data-[active=true]:z-10 data-[active=true]:bg-foreground/10 motion-reduce:transition-none"
+
+// Active focus spring ring
+className="pointer-events-none absolute inset-0 rounded-xl ring-[3px] ring-foreground/75"
+
+// Slot container group
+className="flex items-center gap-3"
+
+// Separator minus icon
+className="flex items-center text-foreground/40 [&_svg:not([class*='size-'])]:size-5"`,
   },
   {
     id: "fanned-cards",
@@ -606,6 +657,9 @@ function renderCardComponent(id: string) {
 
     case "card-spotlight":
       return <CardSpotlightDemo />;
+
+    case "input-otp":
+      return <InputOtpDemo />;
 
     case "fanned-cards":
       return <FannedCards />;
