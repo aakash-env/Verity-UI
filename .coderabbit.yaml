@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+tone_instructions: "Concise, constructive, and actionable technical code review."
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "main"
+  path_filters:
+    - "!node_modules/**"
+    - "!.next/**"
+    - "!pnpm-lock.yaml"
+    - "!package-lock.json"
+    - "!public/**"
+  path_instructions:
+    - path: "app/**"
+      instructions: |
+        Review with Next.js App Router best practices. Ensure server vs client components are properly separated ('use client' directive).
+    - path: "components/**"
+      instructions: |
+        Ensure components follow clean React 19 patterns, proper accessibility attributes (aria-*), and Tailwind CSS utility styling.
+    - path: "lib/**"
+      instructions: |
+        Ensure external client initializations (e.g. Supabase) handle environment variables safely.
+
+chat:
+  auto_reply: true
