@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useSyncExternalStore } from "react";
 import { BrandLogo } from "./Logo";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -22,17 +22,19 @@ interface NavProps {
   onSearchChange?: (query: string) => void;
 }
 
+const emptySubscribe = () => () => {};
+
 export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { user, openAuthModal, signOut } = useAuth();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Close user dropdown when clicking outside or pressing Escape
   useEffect(() => {
@@ -160,6 +162,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
               aria-haspopup="menu"
             >
               {avatarUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={avatarUrl}
                   alt={fullName}
