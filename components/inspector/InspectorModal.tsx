@@ -371,7 +371,7 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
           {/* Controls list */}
           <div className="bencho-inspector__controls">
             {tab === "tune" ? (
-              <div className="space-y-3">
+              <div className="bencho-inspector__tune-list">
                 {/* Row 1: Fill [ Light | Dark ] */}
                 <div className="bencho-inspector__toggle-row">
                   <span className="bencho-inspector__toggle-label">Fill</span>
