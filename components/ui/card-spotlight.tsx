@@ -2,6 +2,7 @@
 
 import { useMotionValue, motion, useMotionTemplate } from "motion/react";
 import React, { MouseEvent as ReactMouseEvent, useState } from "react";
+import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { cn } from "@/lib/utils";
 
 export interface CardSpotlightProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -10,16 +11,15 @@ export interface CardSpotlightProps extends React.HTMLAttributes<HTMLDivElement>
   children: React.ReactNode;
 }
 
-export function CardSpotlight({
+export const CardSpotlight = ({
   children,
-  radius = 280,
-  color = "rgba(59, 130, 246, 0.18)",
+  radius = 350,
+  color = "#262626",
   className,
   ...props
-}: CardSpotlightProps) {
+}: CardSpotlightProps) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const [isHovering, setIsHovering] = useState(false);
 
   function handleMouseMove({
     currentTarget,
@@ -27,52 +27,53 @@ export function CardSpotlight({
     clientY,
   }: ReactMouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect();
+
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   }
 
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
   return (
     <div
       className={cn(
-        "group/spotlight relative overflow-hidden rounded-[24px] border border-white/10 bg-[#17181c] p-6 select-none",
+        "group/spotlight p-8 rounded-2xl relative border border-neutral-800 bg-[#09090b] dark:border-neutral-800 select-none overflow-hidden",
         className
       )}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={(e) => e.stopPropagation()}
       {...props}
     >
-      {/* Spotlight overlay tracking cursor */}
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[24px] opacity-0 transition-opacity duration-300 group-hover/spotlight:opacity-100 z-10"
+        className="pointer-events-none absolute z-0 -inset-px rounded-2xl opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
         style={{
-          background: useMotionTemplate`
+          backgroundColor: color,
+          maskImage: useMotionTemplate`
             radial-gradient(
               ${radius}px circle at ${mouseX}px ${mouseY}px,
-              ${color},
+              white,
               transparent 80%
             )
           `,
         }}
-      />
-
-      {/* Subtle ambient border highlight following cursor */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[24px] opacity-0 transition-opacity duration-300 group-hover/spotlight:opacity-100 z-10"
-        style={{
-          maskImage: useMotionTemplate`
-            radial-gradient(
-              ${radius * 0.75}px circle at ${mouseX}px ${mouseY}px,
-              white,
-              transparent
-            )
-          `,
-          border: "1px solid rgba(255, 255, 255, 0.25)",
-        }}
-      />
-
+      >
+        {isHovering && (
+          <CanvasRevealEffect
+            animationSpeed={5}
+            containerClassName="bg-transparent absolute inset-0 pointer-events-none"
+            colors={[
+              [59, 130, 246],
+              [139, 92, 246],
+            ]}
+            dotSize={3}
+          />
+        )}
+      </motion.div>
       <div className="relative z-20">{children}</div>
     </div>
   );
-}
+};
