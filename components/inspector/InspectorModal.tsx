@@ -40,12 +40,10 @@ interface InspectorModalProps {
 }
 
 export function InspectorModal({ block, onClose }: InspectorModalProps) {
-  const { benchedBlocks, toggleBench } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const [tab, setTab] = useState<"tune" | "code">("tune");
   const [copiedTarget, setCopiedTarget] = useState<string | null>(null);
   const [shared, setShared] = useState(false);
-  const isBenched = block ? benchedBlocks.includes(block.id) : false;
-  const [bookmarked, setBookmarked] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
@@ -75,6 +73,10 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
   if (!block) return null;
 
   const handleCopy = async (text: string, target = "all") => {
+    if (!user) {
+      openAuthModal("Sign in to copy component code.");
+      return;
+    }
     try {
       await navigator.clipboard.writeText(text);
       setCopiedTarget(target);
@@ -92,12 +94,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
       setTimeout(() => setShared(false), 2000);
     } catch {
       // ignore
-    }
-  };
-
-  const handleAddToBench = () => {
-    if (block) {
-      toggleBench(block.id);
     }
   };
 
@@ -267,19 +263,8 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
           className={`bencho-stage-card ${stageFill === "light" ? "bencho-stage-card--light" : ""
             } ${strokeOn ? "bencho-stage-card--stroke" : ""}`}
         >
-          {/* Top Stage Bar: Bookmark & Audio toggles */}
+          {/* Top Stage Bar: Audio toggle */}
           <div className="flex items-center justify-end gap-2.5 z-10">
-            <button
-              type="button"
-              onClick={handleAddToBench}
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                isBenched ? "text-white" : "text-[#eceae5]/50 hover:text-[#eceae5]"
-              }`}
-              title={isBenched ? "Remove from bench" : "Bookmark block"}
-              aria-label="Bookmark block"
-            >
-              <BookmarkIcon filled={isBenched} />
-            </button>
             <button
               type="button"
               onClick={() => setSoundEnabled((s) => !s)}
@@ -359,9 +344,15 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
               type="button"
               role="tab"
               aria-selected={tab === "code"}
-              onClick={() => setTab("code")}
+              onClick={() => {
+                if (!user) {
+                  openAuthModal("Sign in to copy component code.");
+                  return;
+                }
+                setTab("code");
+              }}
               className={`bencho-inspector__tab ${tab === "code" ? "bencho-inspector__tab--active" : ""}`}
-              title="Code"
+              title={!user ? "Sign in to copy code" : "Code"}
               aria-label="Code"
             >
               <CodeIcon />
@@ -524,7 +515,7 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
             )}
           </div>
 
-          {/* Bottom Actions: Share & Add to bench */}
+          {/* Bottom Actions: Share */}
           <div className="bencho-inspector__actions">
             <button
               type="button"
@@ -533,16 +524,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
             >
               <ShareIcon />
               <span>{shared ? "Link Copied!" : "Share"}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleAddToBench}
-              className={`bencho-inspector__add-btn ${
-                isBenched ? "bg-[#34363d] text-white" : ""
-              }`}
-            >
-              {isBenched ? "Added to bench! ✓" : "Add to bench"}
             </button>
           </div>
         </div>
