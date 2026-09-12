@@ -2,14 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { BrandLogo } from "@/components/marketing/Logo";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "@/components/ui/input-otp";
-import { ArrowLeft, X, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export function AuthModal() {
@@ -29,6 +21,7 @@ export function AuthModal() {
   const [error, setError] = useState<string | null>(null);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const codeInputRef = useRef<HTMLInputElement>(null);
 
   // Focus management & Escape key handling
   useEffect(() => {
@@ -44,8 +37,10 @@ export function AuthModal() {
     const timer = setTimeout(() => {
       if (step === "who") {
         emailInputRef.current?.focus();
+      } else {
+        codeInputRef.current?.focus();
       }
-    }, 50);
+    }, 60);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -60,7 +55,7 @@ export function AuthModal() {
     };
   }, [isAuthModalOpen, step, closeAuthModal]);
 
-  // Auto verify when 6 digits are typed
+  // Auto-verify when 6 digits are typed
   useEffect(() => {
     if (step === "code" && code.length === 6 && !loading) {
       handleVerifyCode(code);
@@ -91,7 +86,7 @@ export function AuthModal() {
       setStep("code");
       setCode("");
     } catch (err: any) {
-      setError(err.message || "Failed to send code. Please try again.");
+      setError(err.message || "Could not send a code. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -103,7 +98,7 @@ export function AuthModal() {
       setError(null);
       await verifyEmailOtp(email, token);
     } catch (err: any) {
-      setError(err.message || "Incorrect or expired code. Please try again.");
+      setError(err.message || "That code did not work. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -117,199 +112,214 @@ export function AuthModal() {
       await sendEmailOtp(email);
       setCode("");
     } catch (err: any) {
-      setError(err.message || "Failed to resend code.");
+      setError(err.message || "Could not send a code. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop Scrim */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={closeAuthModal}
-        aria-hidden="true"
-      />
+    <>
+      {/* Scrim backdrop */}
+      <div className="au-scrim" onClick={closeAuthModal} aria-hidden="true" />
 
-      {/* Modal Card */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Sign in"
-        className="relative z-10 w-full max-w-[390px] rounded-[24px] bg-[#16171b] border border-white/10 p-6 sm:p-7 shadow-2xl text-white select-none animate-in fade-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Back Button (Step 2) */}
-        {step === "code" && (
-          <button
-            type="button"
-            onClick={() => {
-              setStep("who");
-              setError(null);
-            }}
-            className="absolute top-5 left-5 size-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-            aria-label="Back to email input"
-          >
-            <ArrowLeft className="size-4" />
-          </button>
-        )}
-
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={closeAuthModal}
-          className="absolute top-5 right-5 size-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-          aria-label="Close"
-        >
-          <X className="size-4" />
-        </button>
-
-        {/* Modal Header */}
-        <div className="flex flex-col items-center text-center mt-2 mb-6">
-          <div className="size-11 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center mb-3">
-            <BrandLogo size={22} />
-          </div>
-
-          <h2 className="text-xl font-semibold tracking-tight text-white">
-            {step === "who" ? "Join Verity" : "Check your email"}
-          </h2>
-
-          {step === "who" && authModalWhy && (
-            <div className="mt-3 w-full rounded-xl bg-white/[0.04] border border-white/5 p-2.5 text-xs text-neutral-300 leading-relaxed text-center">
-              {authModalWhy}
-            </div>
-          )}
-
+      {/* Modal Dialog Wrap */}
+      <div className="au-wrap" role="dialog" aria-modal="true" aria-label="Sign in">
+        <div className="au-card" onClick={(e) => e.stopPropagation()}>
+          {/* Back button (when in OTP code step) */}
           {step === "code" && (
-            <p className="mt-1 text-xs text-neutral-400 leading-relaxed">
-              We sent a 6-digit code to{" "}
-              <strong className="text-neutral-200 font-medium">{email}</strong>.
-            </p>
+            <button
+              className="au-back"
+              type="button"
+              onClick={() => {
+                setStep("who");
+                setError(null);
+              }}
+              aria-label="Back"
+            >
+              <BackIcon />
+            </button>
           )}
-        </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="mb-4 flex items-center gap-2 rounded-xl bg-red-500/10 border border-red-500/20 p-2.5 text-xs text-red-400 animate-in fade-in duration-150">
-            <AlertCircle className="size-4 shrink-0" />
-            <span className="leading-snug">{error}</span>
-          </div>
-        )}
-
-        {/* STEP 1: Identification (Google OAuth + Email) */}
-        {step === "who" && (
-          <div className="flex flex-col gap-4">
-            {/* Google OAuth */}
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className="w-full h-11 rounded-full border border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.07] transition-all flex items-center justify-center gap-2.5 text-sm font-medium text-white cursor-pointer active:scale-[0.99] disabled:opacity-50"
-            >
-              <GoogleIcon />
-              <span>Continue with Google</span>
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 my-1">
-              <div className="h-px flex-1 bg-white/10" />
-              <span className="text-[11px] uppercase tracking-wider text-neutral-500 font-mono">
-                or
-              </span>
-              <div className="h-px flex-1 bg-white/10" />
-            </div>
-
-            {/* Email Form */}
-            <form onSubmit={handleSendEmail} className="flex flex-col gap-3">
-              <input
-                ref={emailInputRef}
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email address"
-                className="w-full h-11 rounded-xl bg-white/[0.04] border border-white/10 px-3.5 text-sm text-white placeholder:text-neutral-500 outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
-                disabled={loading}
-              />
-
-              <button
-                type="submit"
-                disabled={loading || !email.trim()}
-                className="w-full h-11 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "One moment..." : "Continue"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* STEP 2: 6-Digit OTP Verification */}
-        {step === "code" && (
-          <div className="flex flex-col items-center gap-4">
-            <div className="py-2 scale-90 sm:scale-100">
-              <InputOTP
-                maxLength={6}
-                value={code}
-                onChange={setCode}
-                aria-invalid={!!error}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                </InputOTPGroup>
-                <InputOTPSeparator />
-                <InputOTPGroup>
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => handleVerifyCode(code)}
-              disabled={loading || code.length < 6}
-              className="w-full h-11 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Verifying..." : "Sign in"}
-            </button>
-
-            <div className="text-center text-xs text-neutral-400">
-              Nothing arrived?{" "}
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={loading}
-                className="text-white hover:underline font-medium cursor-pointer"
-              >
-                Send again
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Footer Notice */}
-        <div className="mt-5 text-center text-[11px] text-neutral-500 leading-normal">
-          By continuing you agree to our{" "}
-          <Link
-            href="/privacy"
-            className="text-neutral-400 hover:text-white underline underline-offset-2"
+          {/* Close button */}
+          <button
+            className="au-shut"
+            type="button"
+            onClick={closeAuthModal}
+            aria-label="Close"
           >
-            Privacy notice
-          </Link>
-          .
+            <CloseIcon />
+          </button>
+
+          <div className="au-panel">
+            <div className="au-well">
+              {/* Header with Mascot & Title */}
+              <header className="au-head">
+                <span className="au-crest" aria-hidden="true">
+                  <GoatLogo />
+                </span>
+                <h2 className="au-title">Join Bencho</h2>
+              </header>
+
+              {/* Contextual prompt if present (e.g. from benching) */}
+              {authModalWhy && step === "who" && (
+                <p className="au-why">{authModalWhy}</p>
+              )}
+
+              <div className="au-foot">
+                {step === "who" && (
+                  <>
+                    {/* Google OAuth Button */}
+                    <div className="au-vias">
+                      <button
+                        type="button"
+                        className="au-via"
+                        onClick={handleGoogleSignIn}
+                        disabled={loading}
+                      >
+                        <span className="flex items-center justify-center">
+                          <GoogleIcon />
+                        </span>
+                        <span>Continue with Google</span>
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <p className="au-or">
+                      <span>or</span>
+                    </p>
+                  </>
+                )}
+
+                {/* Form: Email or OTP */}
+                <form
+                  className="au-form"
+                  onSubmit={
+                    step === "who"
+                      ? handleSendEmail
+                      : (e) => {
+                          e.preventDefault();
+                          if (code.length === 6) handleVerifyCode(code);
+                        }
+                  }
+                  noValidate
+                >
+                  {step === "who" ? (
+                    <label className="au-field">
+                      <input
+                        ref={emailInputRef}
+                        type="email"
+                        className="au-in"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter email address"
+                        aria-label="Email address"
+                        disabled={loading}
+                        autoComplete="email"
+                        data-bad={!!error}
+                      />
+                    </label>
+                  ) : (
+                    <label className="au-code" aria-label="Six-digit code">
+                      <input
+                        ref={codeInputRef}
+                        className="au-code-in"
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={6}
+                        value={code}
+                        onChange={(e) =>
+                          setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                        }
+                        disabled={loading}
+                        autoFocus
+                      />
+                      <span className="au-cells" aria-hidden="true">
+                        {[0, 1, 2, 3, 4, 5].map((idx) => (
+                          <span
+                            key={idx}
+                            className="au-cell"
+                            data-at={
+                              idx === Math.min(code.length, 5)
+                                ? "true"
+                                : undefined
+                            }
+                            data-on={!!code[idx] ? "true" : undefined}
+                          >
+                            {code[idx] ?? ""}
+                          </span>
+                        ))}
+                      </span>
+                    </label>
+                  )}
+
+                  {error && (
+                    <p className="au-err" role="alert">
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    className="au-go"
+                    type="submit"
+                    disabled={
+                      loading ||
+                      (step === "who" ? !email.trim() : code.length < 6)
+                    }
+                  >
+                    {loading
+                      ? "One moment…"
+                      : step === "who"
+                      ? "Continue"
+                      : "Sign in"}
+                  </button>
+                </form>
+
+                {step === "code" && (
+                  <p className="au-swap">
+                    Nothing arrived?{" "}
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={loading}
+                    >
+                      Send again
+                    </button>
+                  </p>
+                )}
+
+                {/* Footer legal disclaimer */}
+                <p className="au-fine">
+                  By continuing you agree to our{" "}
+                  <Link href="/privacy">Privacy notice</Link>.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
+  );
+}
+
+function GoatLogo() {
+  return (
+    <svg
+      viewBox="0 0 628 513"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Bencho"
+    >
+      <path d="M245.74 512.112H183.764L239.74 381.043H194.053L137.355 512.112H73.8392L165.439 302.187L127.461 216.74L82.4066 247.323L64.1805 295.565H26.9382V247.323H0V198.789L85.3552 0H145.098L115.403 73.1331H152.919L184.834 0H245.731L213.585 73.1331V117.218L266.7 216.74H379.541H617.461L627.461 381.043L572.859 512.112H513.074L569.859 381.043H518.074L461.81 512.112H400.306L457.015 381.043H379.541H302.067L245.74 512.112Z" />
+    </svg>
   );
 }
 
 function GoogleIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="size-4 shrink-0">
+    <svg width="18" height="18" viewBox="0 0 24 24">
       <path
         fill="#4285F4"
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -326,6 +336,41 @@ function GoogleIcon() {
         fill="#EA4335"
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
       />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function BackIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6" />
     </svg>
   );
 }
