@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { BrandLogo } from "@/components/marketing/Logo";
 import Link from "next/link";
 
 export function AuthModal() {
@@ -153,12 +154,12 @@ export function AuthModal() {
 
           <div className="au-panel">
             <div className="au-well">
-              {/* Header with Mascot & Title */}
+              {/* Header with Project Logo & Title */}
               <header className="au-head">
                 <span className="au-crest" aria-hidden="true">
-                  <GoatLogo />
+                  <BrandLogo size={38} interactive={false} />
                 </span>
-                <h2 className="au-title">Join Bencho</h2>
+                <h2 className="au-title">Join Verity</h2>
               </header>
 
               {/* Contextual prompt if present (e.g. from benching) */}
@@ -303,19 +304,7 @@ export function AuthModal() {
   );
 }
 
-function GoatLogo() {
-  return (
-    <svg
-      viewBox="0 0 628 513"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Bencho"
-    >
-      <path d="M245.74 512.112H183.764L239.74 381.043H194.053L137.355 512.112H73.8392L165.439 302.187L127.461 216.74L82.4066 247.323L64.1805 295.565H26.9382V247.323H0V198.789L85.3552 0H145.098L115.403 73.1331H152.919L184.834 0H245.731L213.585 73.1331V117.218L266.7 216.74H379.541H617.461L627.461 381.043L572.859 512.112H513.074L569.859 381.043H518.074L461.81 512.112H400.306L457.015 381.043H379.541H302.067L245.74 512.112Z" />
-    </svg>
-  );
-}
+
 
 function GoogleIcon() {
   return (
