@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "UI blocks you can bench.",
+  title: "Verity - UI blocks you can bench",
   description:
     "Confirms aren't dialogs. They're how you don't lose the customer's data — or their money. 8 production confirmation interactions for React apps.",
   icons: {
@@ -65,6 +65,7 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
