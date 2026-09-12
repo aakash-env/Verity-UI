@@ -20,6 +20,7 @@ import { TextHoverEffectDemo } from "../blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "../blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "../blocks/CanvasTextDemo";
 import { CardSpotlightDemo } from "../blocks/CardSpotlightDemo";
+import { InputOtpDemo } from "../blocks/InputOtpDemo";
 
 export interface BlockConfig {
   id: string;
@@ -118,6 +119,9 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
 
       case "card-spotlight":
         return <CardSpotlightDemo key={resetKey} />;
+
+      case "input-otp":
+        return <InputOtpDemo inModal key={resetKey} />;
 
       case "fanned-cards":
         return <FannedCards key={resetKey} />;
