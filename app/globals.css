@@ -1756,8 +1756,14 @@ h6,
 .bencho-inspector__controls {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   flex: 1;
+}
+
+.bencho-inspector__tune-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
 .bencho-inspector__toggle-row {
