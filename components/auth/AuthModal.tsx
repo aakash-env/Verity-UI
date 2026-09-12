@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { BrandLogo } from "@/components/marketing/Logo";
 import Link from "next/link";
 
 export function AuthModal() {
+  const { isAuthModalOpen } = useAuth();
+  if (!isAuthModalOpen) return null;
+  return <AuthModalContent />;
+}
+
+function AuthModalContent() {
   const {
-    isAuthModalOpen,
     authModalWhy,
     closeAuthModal,
     signInWithGoogle,
@@ -26,15 +31,6 @@ export function AuthModal() {
 
   // Focus management & Escape key handling
   useEffect(() => {
-    if (!isAuthModalOpen) {
-      setStep("who");
-      setEmail("");
-      setCode("");
-      setError(null);
-      setLoading(false);
-      return;
-    }
-
     const timer = setTimeout(() => {
       if (step === "who") {
         emailInputRef.current?.focus();
@@ -54,24 +50,37 @@ export function AuthModal() {
       clearTimeout(timer);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isAuthModalOpen, step, closeAuthModal]);
+  }, [step, closeAuthModal]);
 
-  // Auto-verify when 6 digits are typed
-  useEffect(() => {
-    if (step === "code" && code.length === 6 && !loading) {
-      handleVerifyCode(code);
-    }
-  }, [code, step]);
+  const handleVerifyCode = useCallback(
+    async (token: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+        await verifyEmailOtp(email, token);
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "That code did not work. Please try again.";
+        setError(msg);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [email, verifyEmailOtp]
+  );
 
-  if (!isAuthModalOpen) return null;
 
   const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
       setError(null);
       await signInWithGoogle();
-    } catch (err: any) {
-      setError(err.message || "Could not sign in with Google. Please try again.");
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Could not sign in with Google. Please try again.";
+      setError(msg);
       setLoading(false);
     }
   };
@@ -86,20 +95,10 @@ export function AuthModal() {
       await sendEmailOtp(email);
       setStep("code");
       setCode("");
-    } catch (err: any) {
-      setError(err.message || "Could not send a code. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyCode = async (token: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-      await verifyEmailOtp(email, token);
-    } catch (err: any) {
-      setError(err.message || "That code did not work. Please try again.");
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Could not send a code. Please try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -112,8 +111,10 @@ export function AuthModal() {
       setError(null);
       await sendEmailOtp(email);
       setCode("");
-    } catch (err: any) {
-      setError(err.message || "Could not send a code. Try again.");
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Could not send a code. Try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -230,9 +231,13 @@ export function AuthModal() {
                         autoComplete="one-time-code"
                         maxLength={6}
                         value={code}
-                        onChange={(e) =>
-                          setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                        }
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                          setCode(val);
+                          if (val.length === 6 && !loading) {
+                            handleVerifyCode(val);
+                          }
+                        }}
                         disabled={loading}
                         autoFocus
                       />
