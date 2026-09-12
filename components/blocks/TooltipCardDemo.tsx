@@ -12,6 +12,7 @@ export function TooltipCardDemo() {
         side="top"
         content={
           <div className="flex items-start gap-3 w-[230px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
               alt="Elena Rostova"
@@ -31,6 +32,7 @@ export function TooltipCardDemo() {
         }
       >
         <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#1f2024] hover:bg-[#282a30] border border-white/8 transition-all duration-150 cursor-pointer shadow-lg group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
             alt="Elena"
