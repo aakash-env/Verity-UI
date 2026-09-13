@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface AuthContextType {
   user: User | null;
@@ -91,6 +91,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      throw new Error(
+        "Supabase is not configured on this deployment. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your hosting environment variables and redeploy."
+      );
+    }
+
     const redirectTo =
       typeof window !== "undefined"
         ? `${window.location.origin}/auth/callback`
@@ -113,6 +119,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const sendEmailOtp = useCallback(async (email: string) => {
+    if (!isSupabaseConfigured) {
+      throw new Error(
+        "Supabase is not configured on this deployment. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your hosting environment variables and redeploy."
+      );
+    }
+
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes("@")) {
       throw new Error("Please enter a valid email address.");
