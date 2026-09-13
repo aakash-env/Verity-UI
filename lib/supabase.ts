@@ -6,16 +6,8 @@ const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
   "";
 
-export const isSupabaseConfigured = Boolean(
-  supabaseUrl &&
-    !supabaseUrl.includes("placeholder") &&
-    supabaseAnonKey &&
-    !supabaseAnonKey.includes("placeholder")
-);
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-export const supabase = createBrowserClient(
-  supabaseUrl || "https://placeholder.supabase.co",
-  supabaseAnonKey || "placeholder-anon-key"
-);
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
 
