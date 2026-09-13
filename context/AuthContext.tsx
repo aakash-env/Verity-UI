@@ -1,11 +1,12 @@
 "use client";
 
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
   useState,
   useCallback,
+  type ReactNode,
 } from "react";
 import type { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
@@ -31,7 +32,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const STORAGE_KEY = "verity-benched";
 const BENCH_PROMPT = "Sign in and your collection is saved to your account.";
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
