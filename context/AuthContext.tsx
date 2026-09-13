@@ -77,6 +77,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
+    // Handle PKCE auth code in URL (e.g. email magic link or OAuth landing on /?code=...)
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      if (code) {
+        supabase.auth
+          .exchangeCodeForSession(code)
+          .then(({ data, error }) => {
+            if (!error && data?.session) {
+              setSession(data.session);
+              setUser(data.session.user);
+              setIsAuthModalOpen(false);
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to exchange auth code:", err);
+          })
+          .finally(() => {
+            // Clean ?code= from the address bar so the URL remains clean
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete("code");
+            cleanUrl.searchParams.delete("auth_error");
+            window.history.replaceState(
+              {},
+              document.title,
+              cleanUrl.pathname +
+                (cleanUrl.search ? cleanUrl.search : "") +
+                cleanUrl.hash
+            );
+          });
+      }
+    }
+
     return () => subscription.unsubscribe();
   }, []);
 
