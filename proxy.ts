@@ -14,12 +14,14 @@ export function proxy(request: NextRequest) {
     const callbackUrl = new URL("/auth/callback", request.url);
     callbackUrl.searchParams.set("code", code);
 
-    // Preserve any 'next' parameter if specified, or use the current pathname
+    // Preserve any 'next' parameter if specified, or use the current pathname, defaulting to /auth
     const next = searchParams.get("next");
     if (next) {
       callbackUrl.searchParams.set("next", next);
     } else if (pathname !== "/") {
       callbackUrl.searchParams.set("next", pathname);
+    } else {
+      callbackUrl.searchParams.set("next", "/auth");
     }
 
     return NextResponse.redirect(callbackUrl);
