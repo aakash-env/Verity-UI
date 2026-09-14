@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Nav } from "@/components/marketing/Nav";
 import { Footer } from "@/components/marketing/Footer";
 import {
@@ -22,7 +22,7 @@ import { TextHoverEffectDemo } from "@/components/blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "@/components/blocks/CanvasTextDemo";
 import { InputOtpDemo } from "@/components/blocks/InputOtpDemo";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Play } from "lucide-react";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -425,6 +425,14 @@ className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transf
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeModalBlock, setActiveModalBlock] = useState<BlockConfig | null>(null);
+  const [cardResetKeys, setCardResetKeys] = useState<Record<string, number>>({});
+
+  const handleReplay = useCallback((id: string) => {
+    setCardResetKeys((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -484,6 +492,7 @@ export default function HomePage() {
             >
               {/* Isolated demo container - captures component interactions so checking/clicking doesn't open modal */}
               <div
+                key={cardResetKeys[block.id] || 0}
                 className="bencho-card-demo-wrap"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -501,6 +510,18 @@ export default function HomePage() {
                   {block.name}
                 </span>
                 <div className="bencho-card-actions-hover">
+                  <button
+                    type="button"
+                    className="bencho-card-play-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReplay(block.id);
+                    }}
+                    title="Replay"
+                    aria-label={`Replay ${block.name}`}
+                  >
+                    <Play className="w-3 h-3 fill-current ml-0.5" />
+                  </button>
                   <button
                     type="button"
                     className="bencho-card-tune-btn"
