@@ -1689,7 +1689,7 @@ h6,
 .bencho-card-actions-hover {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 160ms ease, transform 160ms ease;
@@ -1701,33 +1701,49 @@ h6,
   transform: translateY(0);
 }
 
-.bencho-card-tune-btn {
+.bencho-card-action-btn,
+.bencho-card-tune-btn,
+.bencho-card-play-btn {
   width: 32px;
   height: 32px;
-  border-radius: 999px;
+  border-radius: 9999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #26272c;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #eceae5;
+  background: #232429;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #c4c6ce;
   cursor: pointer;
-  transition: background 120ms ease, transform 120ms ease, color 120ms ease;
+  transition: background 130ms ease, transform 130ms ease, color 130ms ease, border-color 130ms ease;
+  flex-shrink: 0;
 }
 
-.bencho-card-tune-btn:hover {
-  background: #34363d;
+.bencho-card-action-btn:hover,
+.bencho-card-tune-btn:hover,
+.bencho-card-play-btn:hover {
+  background: #32343c;
+  border-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
   transform: scale(1.06);
 }
 
-.light .bencho-card-tune-btn {
-  background: #e4e5e8;
-  border-color: rgba(0, 0, 0, 0.08);
-  color: #1a1b1e;
+.bencho-card-action-btn:active,
+.bencho-card-tune-btn:active,
+.bencho-card-play-btn:active {
+  transform: scale(0.95);
 }
 
-.light .bencho-card-tune-btn:hover {
+.light .bencho-card-action-btn,
+.light .bencho-card-tune-btn,
+.light .bencho-card-play-btn {
+  background: #e4e5e8;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #2b2d33;
+}
+
+.light .bencho-card-action-btn:hover,
+.light .bencho-card-tune-btn:hover,
+.light .bencho-card-play-btn:hover {
   background: #d8d9de;
   color: #000000;
 }
