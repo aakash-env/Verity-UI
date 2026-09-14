@@ -2,17 +2,66 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+const ALLOWED_HOSTS = new Set([
+  "localhost:3000",
+  "127.0.0.1:3000",
+  "verity-ui-blocks.vercel.app",
+]);
+
+/**
+ * Validates and sanitizes the post-login destination URL to prevent Open Redirects.
+ * Only relative single-slash paths on the same origin are allowed.
+ */
+function getSafeNextPath(rawNext: string | null): string {
+  if (!rawNext) return "/auth";
+  if (
+    rawNext.startsWith("/") &&
+    !rawNext.startsWith("//") &&
+    !rawNext.startsWith("/\\")
+  ) {
+    try {
+      const dummyUrl = new URL(rawNext, "http://localhost");
+      return dummyUrl.pathname + dummyUrl.search + dummyUrl.hash;
+    } catch {
+      return "/auth";
+    }
+  }
+  return "/auth";
+}
+
+/**
+ * Validates the origin against an approved host allowlist to prevent Host Header Poisoning.
+ */
+function getSafeRedirectOrigin(request: Request, fallbackOrigin: string): string {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  if (!forwardedHost) return fallbackOrigin;
+
+  const isAllowed =
+    ALLOWED_HOSTS.has(forwardedHost) ||
+    forwardedHost.endsWith(".vercel.app") ||
+    forwardedHost.endsWith(".amplifyapp.com");
+
+  if (isAllowed) {
+    const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+
+  return fallbackOrigin;
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/auth";
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
+
+  const safeOrigin = getSafeRedirectOrigin(request, origin);
+  const safeNext = getSafeNextPath(searchParams.get("next"));
 
   if (error || errorDescription) {
     console.error("Supabase auth redirect error:", error, errorDescription);
     return NextResponse.redirect(
-      `${origin}/?auth_error=${encodeURIComponent(
+      `${safeOrigin}/?auth_error=${encodeURIComponent(
         errorDescription || error || "auth_failed"
       )}`
     );
@@ -26,17 +75,7 @@ export async function GET(request: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
       "sb_publishable_poRoEipUmIxUmAzE3CIO9w_V5Bdhe1b";
 
-    const forwardedHost = request.headers.get("x-forwarded-host");
-    const isLocalEnv = process.env.NODE_ENV === "development";
-    let redirectUrl: string;
-    if (isLocalEnv) {
-      redirectUrl = `${origin}${next}`;
-    } else if (forwardedHost) {
-      redirectUrl = `https://${forwardedHost}${next}`;
-    } else {
-      redirectUrl = `${origin}${next}`;
-    }
-
+    const redirectUrl = `${safeOrigin}${safeNext}`;
     const cookieStore = await cookies();
     const response = NextResponse.redirect(redirectUrl);
 
@@ -72,5 +111,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/?auth_error=true`);
+  return NextResponse.redirect(`${safeOrigin}/?auth_error=true`);
 }
