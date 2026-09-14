@@ -24,11 +24,10 @@ export function BrandLogo({
 
   return (
     <span
-      className={`relative inline-flex items-center justify-center p-0.5 rounded-lg text-[var(--color-text)] select-none ${
-        interactive
-          ? "transition-transform duration-300 hover:scale-105 active:scale-95"
-          : ""
-      } ${className}`}
+      className={`relative inline-flex items-center justify-center p-0.5 rounded-lg text-[var(--color-text)] select-none ${interactive
+        ? "transition-transform duration-300 hover:scale-105 active:scale-95"
+        : ""
+        } ${className}`}
       title="Verity"
       aria-label="Verity logo"
     >
