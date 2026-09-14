@@ -95,9 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.error("Failed to exchange auth code:", err);
           })
           .finally(() => {
-            // Clean ?code= from the address bar so the URL remains clean
+            // Clean ?code= and ?fallback= from the address bar so the URL remains clean
             const cleanUrl = new URL(window.location.href);
             cleanUrl.searchParams.delete("code");
+            cleanUrl.searchParams.delete("fallback");
             cleanUrl.searchParams.delete("auth_error");
             window.history.replaceState(
               {},
