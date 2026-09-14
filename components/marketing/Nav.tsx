@@ -8,8 +8,6 @@ import { useAuth } from "@/context/AuthContext";
 import {
   LogOut,
   ChevronDown,
-  Bookmark,
-  SquarePlus,
   MessageSquare,
   Sun,
   Moon,
@@ -180,39 +178,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                 role="menu"
                 aria-orientation="vertical"
               >
-                {/* 1. Saved */}
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    const el = document.getElementById("blocks");
-                    el?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="bencho-user-dropdown-row"
-                >
-                  <span>Saved</span>
-                  <Bookmark className="w-4 h-4 text-[#8c8e96]" />
-                </button>
-
-                {/* 2. Request a block */}
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    window.open(
-                      "https://github.com/aakash-env/Verity-UI/issues",
-                      "_blank"
-                    );
-                  }}
-                  className="bencho-user-dropdown-row"
-                >
-                  <span>Request a block</span>
-                  <SquarePlus className="w-4 h-4 text-[#8c8e96]" />
-                </button>
-
-                {/* 3. Contact us */}
+                {/* 1. Contact us */}
                 <button
                   type="button"
                   role="menuitem"
