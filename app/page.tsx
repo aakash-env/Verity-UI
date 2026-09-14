@@ -527,9 +527,6 @@ export default function HomePage() {
 
       {/* Clean Minimal Hero */}
       <header className="bencho-hero">
-        <div className="bencho-badge">
-          <span>New blocks every week</span>
-        </div>
         <h1 className="bencho-hero__title">
           UI blocks you can bench.
         </h1>
