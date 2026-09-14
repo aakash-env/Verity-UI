@@ -11,7 +11,6 @@ import {
   HoldToConfirm,
   TypeToConfirm,
   UndoToast,
-  SlideToDelete,
   TwoStepReview,
   InlineRowConfirm,
   DangerousToggle,
@@ -300,36 +299,6 @@ className="h-1 rounded-full bg-[#eceae5] transition-none w-full"
 
 // Rollback undo action
 className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-xs font-semibold text-[#eceae5] transition-colors"`,
-  },
-  {
-    id: "slide-to-delete",
-    name: "Slide to delete",
-    category: "IRREVERSIBLE",
-    risk: "irreversible",
-    tagline: "High-friction threshold swipe",
-    description:
-      "Friction slider requiring drag past 80% threshold. Zero-bounce spring return snaps thumb back if abandoned.",
-    codeReact: `import { SlideToDelete } from "@/components/confirms";
-
-<SlideToDelete
-  risk="irreversible"
-  title="Revoke root API credential"
-  consequence="Active background workers will immediately receive HTTP 401."
-  confirmLabel="Slide to revoke key →"
-  threshold={0.8}
-  onConfirm={async () => {
-    await api.revokeKey("live_sk_9481");
-  }}
-/>`,
-    codeCss: `/* Tailwind CSS utility classes */
-// Slider friction track
-className="relative w-[280px] h-12 rounded-full bg-[#151619] border border-white/10 p-1 flex items-center select-none"
-
-// Slider thumb
-className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-500 flex items-center justify-center text-white cursor-grab active:cursor-grabbing shadow-lg transition-colors"
-
-// Consequence track label
-className="absolute inset-0 flex items-center justify-center text-xs font-medium text-[#8e909a] pointer-events-none"`,
   },
   {
     id: "two-step-review",
@@ -627,19 +596,6 @@ function renderCardComponent(id: string) {
           duration={6000}
           onConfirm={async () => {
             await delay(300);
-          }}
-        />
-      );
-
-    case "slide-to-delete":
-      return (
-        <SlideToDelete
-          hideMeta
-          risk="irreversible"
-          confirmLabel="Slide to delete →"
-          threshold={0.8}
-          onConfirm={async () => {
-            await delay(600);
           }}
         />
       );
