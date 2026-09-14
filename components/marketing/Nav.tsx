@@ -77,7 +77,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
   return (
     <nav className="bencho-nav" aria-label="Main Navigation">
       {/* Left: Brand Icon + Links */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-6 justify-self-start">
         <Link href="/" className="text-[var(--color-text)] flex items-center hover:opacity-85 transition-opacity" aria-label="Verity">
           <BrandLogo size={22} />
         </Link>
@@ -95,7 +95,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
       </div>
 
       {/* Center: Search pill bar */}
-      <div className="bencho-search-bar">
+      <div className="bencho-search-bar justify-self-center">
         <SearchIcon />
         <input
           type="text"
@@ -118,7 +118,7 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
       </div>
 
       {/* Right: Sound, Theme, Join / User */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 justify-self-end">
         {/* Sound toggle (bencho style) */}
         <button
           type="button"
