@@ -427,10 +427,10 @@ export default function HomePage() {
   const [activeModalBlock, setActiveModalBlock] = useState<BlockConfig | null>(null);
   const [cardResetKeys, setCardResetKeys] = useState<Record<string, number>>({});
 
-  const handleReplay = useCallback((id: string) => {
+  const handleReplay = useCallback((blockId: string) => {
     setCardResetKeys((prev) => ({
       ...prev,
-      [id]: (prev[id] || 0) + 1,
+      [blockId]: (prev[blockId] || 0) + 1,
     }));
   }, []);
 
@@ -510,21 +510,24 @@ export default function HomePage() {
                   {block.name}
                 </span>
                 <div className="bencho-card-actions-hover">
+                  {/* Replay action */}
                   <button
                     type="button"
-                    className="bencho-card-play-btn"
+                    className="bencho-card-action-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleReplay(block.id);
                     }}
-                    title="Replay"
+                    title="Replay component"
                     aria-label={`Replay ${block.name}`}
                   >
                     <Play className="w-3 h-3 fill-current ml-0.5" />
                   </button>
+
+                  {/* Tune / Inspect action */}
                   <button
                     type="button"
-                    className="bencho-card-tune-btn"
+                    className="bencho-card-action-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveModalBlock(block);
