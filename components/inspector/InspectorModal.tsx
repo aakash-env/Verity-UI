@@ -6,7 +6,6 @@ import {
   HoldToConfirm,
   TypeToConfirm,
   UndoToast,
-  SlideToDelete,
   TwoStepReview,
   InlineRowConfirm,
   DangerousToggle,
@@ -152,21 +151,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
             duration={6000}
             onConfirm={async () => {
               await new Promise((r) => setTimeout(r, 300));
-            }}
-          />
-        );
-
-      case "slide-to-delete":
-        return (
-          <SlideToDelete
-            key={resetKey}
-            risk="irreversible"
-            title="Revoke root API credential"
-            consequence="Active background workers will immediately receive HTTP 401."
-            confirmLabel="Slide to revoke key →"
-            threshold={0.8}
-            onConfirm={async () => {
-              await new Promise((r) => setTimeout(r, 600));
             }}
           />
         );
