@@ -17,9 +17,7 @@ import {
   DangerousToggle,
 } from "@/components/confirms";
 import { FannedCards } from "@/components/blocks/FannedCards";
-import { TaskChecklist } from "@/components/blocks/TaskChecklist";
 import { ColorSwatches } from "@/components/blocks/ColorSwatches";
-import { RadialOrb } from "@/components/blocks/RadialOrb";
 import { ImagesBadgeDemo } from "@/components/blocks/ImagesBadgeDemo";
 import { TextHoverEffectDemo } from "@/components/blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
@@ -30,43 +28,6 @@ import { SlidersHorizontal } from "lucide-react";
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const BLOCKS: BlockConfig[] = [
-  {
-    id: "radial-orb",
-    name: "Radial ambient orb",
-    category: "INTERACTION",
-    tagline: "Radial orbiting satellites with chromatic gradient core",
-    description:
-      "Interactive multi-satellite orbit ring with dynamic depth scaling, hover state illumination, and iridescent chromatic glow.",
-    codeReact: `import { RadialOrb } from "@/components/blocks/RadialOrb";
-
-<RadialOrb />`,
-    codeCss: `/* Tailwind CSS utility classes */
-// Satellite node
-className="absolute w-8 h-8 rounded-full bg-[#26272b] dark:bg-[#25262a] border border-white/5 transition-transform duration-200 hover:scale-115 hover:bg-[#323338] cursor-pointer"
-
-// Radiant chromatic center orb
-className="relative z-10 w-16 h-16 rounded-full cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 bg-[radial-gradient(circle_at_35%_30%,#ff80d5_0%,#b86bfc_30%,#00d2ff_70%,#10b981_100%)] shadow-[0_0_30px_rgba(184,107,252,0.45),0_0_60px_rgba(0,210,255,0.2),inset_0_2px_4px_rgba(255,255,255,0.4)]"`,
-  },
-  {
-    id: "task-checklist",
-    name: "Task checklist",
-    category: "SELECTION",
-    tagline: "Fluid rounded task items with custom checkboxes",
-    description:
-      "Clean dark surface with interactive checklist items, animated state toggles, and strikethrough transitions.",
-    codeReact: `import { TaskChecklist } from "@/components/blocks/TaskChecklist";
-
-<TaskChecklist />`,
-    codeCss: `/* Tailwind CSS utility classes */
-// Checklist card container
-className="w-[260px] p-5 rounded-[20px] bg-[#1f2024] border border-white/5 select-none shadow-[0_8px_32px_-8px_rgba(0,0,0,0.35)]"
-
-// Checkbox item
-className="w-4 h-4 rounded-[5px] border flex items-center justify-center transition-colors border-[#4e5058] group-hover:border-[#72747d] data-[checked=true]:bg-[#eceae5] data-[checked=true]:border-[#eceae5]"
-
-// Task label
-className="text-[13px] font-normal transition-colors text-[#d1d3d9] group-hover:text-[#eceae5] data-[checked=true]:line-through data-[checked=true]:text-[#6b6d75]"`,
-  },
   {
     id: "images-badge",
     name: "3D images badge",
@@ -612,9 +573,6 @@ export default function HomePage() {
 
 function renderCardComponent(id: string) {
   switch (id) {
-    case "radial-orb":
-      return <RadialOrb />;
-
     case "images-badge":
       return <ImagesBadgeDemo />;
 
@@ -632,9 +590,6 @@ function renderCardComponent(id: string) {
 
     case "fanned-cards":
       return <FannedCards />;
-
-    case "task-checklist":
-      return <TaskChecklist />;
 
     case "hold-to-confirm":
       return (
