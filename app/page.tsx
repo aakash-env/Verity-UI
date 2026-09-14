@@ -22,11 +22,105 @@ import { TextHoverEffectDemo } from "@/components/blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "@/components/blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "@/components/blocks/CanvasTextDemo";
 import { InputOtpDemo } from "@/components/blocks/InputOtpDemo";
+import { MagneticSelect } from "@/components/blocks/MagneticSelect";
+import { SecretKeyVault } from "@/components/blocks/SecretKeyVault";
+import { TimelineScrubber } from "@/components/blocks/TimelineScrubber";
+import { MechanicalKeybind } from "@/components/blocks/MechanicalKeybind";
+import { BranchGraphPicker } from "@/components/blocks/BranchGraphPicker";
 import { SlidersHorizontal, Play } from "lucide-react";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const BLOCKS: BlockConfig[] = [
+  {
+    id: "magnetic-select",
+    name: "Magnetic select",
+    category: "INTERACTION",
+    tagline: "Elastic cursor-tracking segmented pill with spring snap",
+    description:
+      "Interactive dock-style segmented selector with physics-based spring morphing, hover illumination glow, and tactile state switching.",
+    codeReact: `import { MagneticSelect } from "@/components/blocks/MagneticSelect";
+
+<MagneticSelect />`,
+    codeCss: `/* Dedicated CSS Classes */
+// Container
+.magnetic-select-container { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border-radius: 9999px; background: #16171b; border: 1px solid rgba(255,255,255,0.08); }
+
+// Option Button
+.magnetic-select-btn { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 500; cursor: pointer; color: #8c8e96; }
+.magnetic-select-btn.is-selected { color: #ffffff; }
+
+// Sliding Spring Pill
+.magnetic-select-active-pill { position: absolute; inset: 0; border-radius: 9999px; background: #262830; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 2px 10px rgba(0,0,0,0.45); }`,
+  },
+  {
+    id: "secret-key-vault",
+    name: "Secret key vault",
+    category: "SECURITY",
+    tagline: "Matrix decipher reveal with entropy meter & auto-masking",
+    description:
+      "Cyber-styled API secret key card with real-time character scrambler deciphering, 5-second automatic re-obscure countdown, and one-click copy.",
+    codeReact: `import { SecretKeyVault } from "@/components/blocks/SecretKeyVault";
+
+<SecretKeyVault />`,
+    codeCss: `/* Tailwind CSS utility classes */
+// Secret vault card
+className="w-[300px] p-4 rounded-2xl bg-[#17181c] border border-white/10 shadow-2xl flex flex-col gap-3"
+
+// Decipher terminal pill
+className="relative flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#101114] border border-white/8 font-mono text-[12px] text-[#eceae5]"`,
+  },
+  {
+    id: "timeline-scrubber",
+    name: "Audit revision scrubber",
+    category: "SELECTION",
+    tagline: "Precision temporal slider with live diff popover & rollback",
+    description:
+      "Precision chronological scrubber for git branches and deployment rollbacks featuring floating vernier metadata and active diff badges.",
+    codeReact: `import { TimelineScrubber } from "@/components/blocks/TimelineScrubber";
+
+<TimelineScrubber />`,
+    codeCss: `/* Tailwind CSS utility classes */
+// Timeline card
+className="w-[310px] p-4 rounded-2xl bg-[#16171b] border border-white/10 shadow-2xl select-none flex flex-col gap-3.5"
+
+// Active scrubber node
+className="w-4 h-4 rounded-full bg-sky-400 border-2 border-white scale-125 shadow-[0_0_10px_rgba(56,189,248,0.8)]"`,
+  },
+  {
+    id: "mechanical-keybind",
+    name: "3D mechanical keybind",
+    category: "CREATIVE",
+    tagline: "Realistic 3D tactile mechanical keycaps with switch travel",
+    description:
+      "Isometric 3D mechanical keyboard switch simulator that physically depresses on click or global keypress with acoustic spring rebound.",
+    codeReact: `import { MechanicalKeybind } from "@/components/blocks/MechanicalKeybind";
+
+<MechanicalKeybind />`,
+    codeCss: `/* Tailwind CSS utility classes */
+// 3D Keycap base
+className="relative w-16 h-16 rounded-2xl bg-gradient-to-b from-[#2d2f36] to-[#1c1d22] p-1 shadow-[0_8px_0_#121316,0_12px_20px_rgba(0,0,0,0.6)] border border-white/10 active:translate-y-1.5"
+
+// Keycap stem face
+className="w-full h-full rounded-xl bg-gradient-to-b from-[#282a30] to-[#1f2025] flex flex-col items-center justify-between p-2 text-[#eceae5]"`,
+  },
+  {
+    id: "branch-graph-picker",
+    name: "Branch graph switcher",
+    category: "INTERACTION",
+    tagline: "Visual git topology switcher with live commit status badges",
+    description:
+      "Topological tree branch picker with connected bezier curves, commit ahead/behind counters, and instant environment switching.",
+    codeReact: `import { BranchGraphPicker } from "@/components/blocks/BranchGraphPicker";
+
+<BranchGraphPicker />`,
+    codeCss: `/* Tailwind CSS utility classes */
+// Topology card container
+className="w-[310px] p-4 rounded-2xl bg-[#16171b] border border-white/10 shadow-2xl select-none flex flex-col gap-3"
+
+// Active branch row
+className="relative flex items-center justify-between p-2.5 rounded-xl border bg-[#23252d] border-violet-500/40 shadow-lg"`,
+  },
   {
     id: "images-badge",
     name: "3D images badge",
@@ -566,6 +660,21 @@ export default function HomePage() {
 
 function renderCardComponent(id: string) {
   switch (id) {
+    case "magnetic-select":
+      return <MagneticSelect />;
+
+    case "secret-key-vault":
+      return <SecretKeyVault />;
+
+    case "timeline-scrubber":
+      return <TimelineScrubber />;
+
+    case "mechanical-keybind":
+      return <MechanicalKeybind />;
+
+    case "branch-graph-picker":
+      return <BranchGraphPicker />;
+
     case "images-badge":
       return <ImagesBadgeDemo />;
 

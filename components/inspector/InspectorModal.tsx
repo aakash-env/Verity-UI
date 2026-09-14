@@ -17,6 +17,11 @@ import { TextHoverEffectDemo } from "../blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "../blocks/TooltipCardDemo";
 import { CanvasTextDemo } from "../blocks/CanvasTextDemo";
 import { InputOtpDemo } from "../blocks/InputOtpDemo";
+import { MagneticSelect } from "../blocks/MagneticSelect";
+import { SecretKeyVault } from "../blocks/SecretKeyVault";
+import { TimelineScrubber } from "../blocks/TimelineScrubber";
+import { MechanicalKeybind } from "../blocks/MechanicalKeybind";
+import { BranchGraphPicker } from "../blocks/BranchGraphPicker";
 import { useAuth } from "@/context/AuthContext";
 
 export interface BlockConfig {
@@ -88,6 +93,21 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
 
   const renderComponentPreview = () => {
     switch (block.id) {
+      case "magnetic-select":
+        return <MagneticSelect key={resetKey} />;
+
+      case "secret-key-vault":
+        return <SecretKeyVault key={resetKey} />;
+
+      case "timeline-scrubber":
+        return <TimelineScrubber key={resetKey} />;
+
+      case "mechanical-keybind":
+        return <MechanicalKeybind key={resetKey} />;
+
+      case "branch-graph-picker":
+        return <BranchGraphPicker key={resetKey} />;
+
       case "images-badge":
         return <ImagesBadgeDemo key={resetKey} />;
 
