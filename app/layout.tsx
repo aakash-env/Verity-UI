@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -81,6 +82,7 @@ export default function RootLayout({
           <AuthProvider>
             {children}
             <AuthModal />
+            <Analytics />
           </AuthProvider>
         </ThemeProvider>
       </body>

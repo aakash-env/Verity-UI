@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' blob: data: https:;
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://va.vercel-scripts.com https://vitals.vercel-insights.com;
   form-action 'self' https://*.supabase.co https://accounts.google.com;
   object-src 'none';
   base-uri 'self';
