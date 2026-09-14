@@ -5,8 +5,12 @@ export function proxy(request: NextRequest) {
   const { searchParams, pathname } = request.nextUrl;
   const code = searchParams.get("code");
 
-  // If Supabase redirects to /?code=... or any path with ?code=..., route to /auth/callback to exchange for session
-  if (code && !pathname.startsWith("/auth/callback")) {
+  // Only forward to /auth/callback if it has not already been processed by the callback route
+  if (
+    code &&
+    !pathname.startsWith("/auth/callback") &&
+    !searchParams.has("fallback")
+  ) {
     const callbackUrl = new URL("/auth/callback", request.url);
     callbackUrl.searchParams.set("code", code);
 
