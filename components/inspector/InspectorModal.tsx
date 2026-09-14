@@ -12,9 +12,7 @@ import {
   DangerousToggle,
 } from "../confirms";
 import { FannedCards } from "../blocks/FannedCards";
-import { TaskChecklist } from "../blocks/TaskChecklist";
 import { ColorSwatches } from "../blocks/ColorSwatches";
-import { RadialOrb } from "../blocks/RadialOrb";
 import { ImagesBadgeDemo } from "../blocks/ImagesBadgeDemo";
 import { TextHoverEffectDemo } from "../blocks/TextHoverEffectDemo";
 import { TooltipCardDemo } from "../blocks/TooltipCardDemo";
@@ -91,9 +89,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
 
   const renderComponentPreview = () => {
     switch (block.id) {
-      case "radial-orb":
-        return <RadialOrb key={resetKey} />;
-
       case "images-badge":
         return <ImagesBadgeDemo key={resetKey} />;
 
@@ -111,9 +106,6 @@ export function InspectorModal({ block, onClose }: InspectorModalProps) {
 
       case "fanned-cards":
         return <FannedCards key={resetKey} />;
-
-      case "task-checklist":
-        return <TaskChecklist key={resetKey} />;
 
       case "palette-swatches":
         return <ColorSwatches key={resetKey} />;
