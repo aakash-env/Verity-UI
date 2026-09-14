@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.error("Failed to exchange auth code:", err);
           })
           .finally(() => {
-            // Clean ?code= and ?fallback= from the address bar so the URL remains clean
+            // Navigate to /auth and clean ?code=, ?fallback=, and ?auth_error
             const cleanUrl = new URL(window.location.href);
             cleanUrl.searchParams.delete("code");
             cleanUrl.searchParams.delete("fallback");
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             window.history.replaceState(
               {},
               document.title,
-              cleanUrl.pathname +
+              "/auth" +
                 (cleanUrl.search ? cleanUrl.search : "") +
                 cleanUrl.hash
             );
@@ -133,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const redirectTo =
       typeof window !== "undefined"
-        ? `${window.location.origin}/auth/callback`
+        ? `${window.location.origin}/auth/callback?next=/auth`
         : undefined;
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -166,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const emailRedirectTo =
       typeof window !== "undefined"
-        ? `${window.location.origin}/auth/callback`
+        ? `${window.location.origin}/auth/callback?next=/auth`
         : undefined;
 
     const { error } = await supabase.auth.signInWithOtp({
@@ -207,6 +207,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(data.session);
       setUser(data.user);
       setIsAuthModalOpen(false);
+      if (typeof window !== "undefined" && window.location.pathname !== "/auth") {
+        window.history.pushState({}, "", "/auth");
+      }
     }
   }, []);
 
@@ -214,6 +217,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+    if (typeof window !== "undefined" && window.location.pathname === "/auth") {
+      window.location.href = "/";
+    }
   }, []);
 
   const toggleBench = useCallback(
