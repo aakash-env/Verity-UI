@@ -22,7 +22,7 @@ interface NavProps {
   onSearchChange?: (query: string) => void;
 }
 
-const emptySubscribe = () => () => {};
+const emptySubscribe = () => () => { };
 
 export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -84,12 +84,6 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
         <div className="flex items-center gap-5 text-sm">
           <a href="#blocks" className="text-[var(--color-text)] font-medium">
             Blocks
-          </a>
-          <a
-            href="#blocks"
-            className="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
-          >
-            Studio
           </a>
         </div>
       </div>
@@ -175,9 +169,8 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
               )}
               <span className="truncate max-w-[130px] font-medium">{fullName}</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 opacity-60 shrink-0 transition-transform duration-150 ${
-                  isUserMenuOpen ? "rotate-180" : ""
-                }`}
+                className={`w-3.5 h-3.5 opacity-60 shrink-0 transition-transform duration-150 ${isUserMenuOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
@@ -261,11 +254,10 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                     <button
                       type="button"
                       onClick={() => setTheme("light")}
-                      className={`bencho-user-dropdown-pill-btn ${
-                        theme === "light"
+                      className={`bencho-user-dropdown-pill-btn ${theme === "light"
                           ? "bencho-user-dropdown-pill-btn--active"
                           : ""
-                      }`}
+                        }`}
                       title="Light mode"
                       aria-label="Light mode"
                     >
@@ -274,11 +266,10 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                     <button
                       type="button"
                       onClick={() => setTheme("dark")}
-                      className={`bencho-user-dropdown-pill-btn ${
-                        theme === "dark"
+                      className={`bencho-user-dropdown-pill-btn ${theme === "dark"
                           ? "bencho-user-dropdown-pill-btn--active"
                           : ""
-                      }`}
+                        }`}
                       title="Dark mode"
                       aria-label="Dark mode"
                     >
@@ -287,11 +278,10 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                     <button
                       type="button"
                       onClick={() => setTheme("system")}
-                      className={`bencho-user-dropdown-pill-btn ${
-                        theme === "system" || !theme
+                      className={`bencho-user-dropdown-pill-btn ${theme === "system" || !theme
                           ? "bencho-user-dropdown-pill-btn--active"
                           : ""
-                      }`}
+                        }`}
                       title="System theme"
                       aria-label="System theme"
                     >
@@ -311,11 +301,10 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                     <button
                       type="button"
                       onClick={() => setSoundEnabled(false)}
-                      className={`bencho-user-dropdown-pill-btn ${
-                        !soundEnabled
+                      className={`bencho-user-dropdown-pill-btn ${!soundEnabled
                           ? "bencho-user-dropdown-pill-btn--active"
                           : ""
-                      }`}
+                        }`}
                       title="Sound muted"
                       aria-label="Sound muted"
                     >
@@ -324,11 +313,10 @@ export function Nav({ searchQuery = "", onSearchChange }: NavProps) {
                     <button
                       type="button"
                       onClick={() => setSoundEnabled(true)}
-                      className={`bencho-user-dropdown-pill-btn ${
-                        soundEnabled
+                      className={`bencho-user-dropdown-pill-btn ${soundEnabled
                           ? "bencho-user-dropdown-pill-btn--active"
                           : ""
-                      }`}
+                        }`}
                       title="Sound on"
                       aria-label="Sound on"
                     >
